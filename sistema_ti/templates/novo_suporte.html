@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h3>Registrar Atendimento Técnico</h3>
+    <form method="POST">
+        <div class="form-group">
+            <label>Data do Atendimento</label>
+            <input type="date" name="data_suporte" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Natureza do Atendimento</label>
+            <select name="tipo_suporte" class="form-control">
+                <option value="Manutenção Corretiva">Manutenção Corretiva</option>
+                <option value="Manutenção Preventiva">Manutenção Preventiva</option>
+                <option value="Atualização de Software">Atualização de Software</option>
+                <option value="Troca de Peça">Troca de Peça</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Descrição Detalhada (Problema e Solução)</label>
+            <textarea name="descricao" class="form-control" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Técnico / Equipe Responsável</label>
+            <input type="text" name="responsavel" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Custo Associado (R$)</label>
+            <input type="number" name="custo" step="0.01" class="form-control" placeholder="0.00">
+        </div>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+        <a href="{{ url_for('registros_suporte', id_equipamento=id_equipamento) }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

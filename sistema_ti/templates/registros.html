@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h2>Histórico de Suporte</h2>
+    <p><strong>Equipamento:</strong> {{ equipamento[2] }} - {{ equipamento[3] }} {{ equipamento[4] }} (Patrimônio: {{ equipamento[1] }})</p>
+    <a href="{{ url_for('novo_suporte', id_equipamento=equipamento[0]) }}" class="btn btn-primary">+ Registrar Atendimento</a>
+</div>
+
+<div class="card">
+    <h3>Atendimentos</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Tipo de Suporte</th>
+                <th>Descrição</th>
+                <th>Responsável</th>
+                <th>Custo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sup in suportes %}
+            <tr>
+                <td>{{ sup[0] }}</td>
+                <td>{{ sup[2] }}</td>
+                <td>{{ sup[3] }}</td>
+                <td>{{ sup[4] }}</td>
+                <td>{{ sup[5] }}</td>
+                <td>R$ {{ sup[6] }}</td>
+                <td>
+                    <a href="{{ url_for('deletar_suporte', id=sup[0], id_equipamento=equipamento[0]) }}" class="btn btn-danger" style="padding:2px 5px; font-size:0.8rem;" onclick="return confirm('Excluir apenas em caso de erro de cadastro. Deseja prosseguir?')">Excluir</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7">Nenhum atendimento técnico registrado para este ativo.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Voltar</a>
+</div>
+{% endblock %}

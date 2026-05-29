@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h3>{{ 'Editar' if equipamento else 'Cadastrar' }} Equipamento</h3>
+    <form method="POST">
+        <div class="form-group">
+            <label>Código Patrimonial (Único)</label>
+            <input type="text" name="patrimonio" class="form-control" required value="{{ equipamento[1] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Tipo de Equipamento</label>
+            <input type="text" name="tipo" class="form-control" placeholder="ex: Notebook, Impressora" required value="{{ equipamento[2] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Marca</label>
+            <input type="text" name="marca" class="form-control" required value="{{ equipamento[3] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Modelo</label>
+            <input type="text" name="modelo" class="form-control" required value="{{ equipamento[4] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Número de Série (Único)</label>
+            <input type="text" name="numero_serie" class="form-control" required value="{{ equipamento[5] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Data de Aquisição</label>
+            <input type="date" name="data_acisicao" class="form-control" required value="{{ equipamento[6] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Localização / Setor</label>
+            <input type="text" name="localizacao" class="form-control" required value="{{ equipamento[7] if equipamento else '' }}">
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="Em Uso" {{ 'selected' if equipamento and equipamento[8] == 'Em Uso' }}>Em Uso</option>
+                <option value="Em Manutenção" {{ 'selected' if equipamento and equipamento[8] == 'Em Manutenção' }}>Em Manutenção</option>
+                <option value="Desativado" {{ 'selected' if equipamento and equipamento[8] == 'Desativado' }}>Desativado</option>
+                <option value="Descartado" {{ 'selected' if equipamento and equipamento[8] == 'Descartado' }}>Descartado</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

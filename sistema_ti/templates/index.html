@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+    <h3>Filtros e Consultas</h3>
+    <form method="GET" action="{{ url_for('index') }}" class="filter-grid">
+        <div class="form-group">
+            <label>Buscar (ID, Série ou Patrimônio)</label>
+            <input type="text" name="busca" class="form-control" value="{{ filtros.busca or '' }}">
+        </div>
+        <div class="form-group">
+            <label>Tipo</label>
+            <select name="tipo" class="form-control">
+                <option value="">Todos</option>
+                <option value="Notebook" {% if filtros.tipo == 'Notebook' %}selected{% endif %}>Notebook</option>
+                <option value="Impressora" {% if filtros.tipo == 'Impressora' %}selected{% endif %}>Impressora</option>
+                <option value="Servidor" {% if filtros.tipo == 'Servidor' %}selected{% endif %}>Servidor</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+                <option value="">Todos</option>
+                <option value="Em Uso" {% if filtros.status == 'Em Uso' %}selected{% endif %}>Em Uso</option>
+                <option value="Em Manutenção" {% if filtros.status == 'Em Manutenção' %}selected{% endif %}>Em Manutenção</option>
+                <option value="Desativado" {% if filtros.status == 'Desativado' %}selected{% endif %}>Desativado</option>
+                <option value="Descartado" {% if filtros.status == 'Descartado' %}selected{% endif %}>Descartado</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="{{ url_for('index') }}" class="btn btn-secondary">Limpar</a>
+        </div>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Equipamentos Cadastrados</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Patrimônio</th>
+                <th>Tipo</th>
+                <th>Marca/Modelo</th>
+                <th>Nº Série</th>
+                <th>Localização</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for eq in equipamentos %}
+            <tr>
+                <td>{{ eq[0] }}</td>
+                <td>{{ eq[1] }}</td>
+                <td>{{ eq[2] }}</td>
+                <td>{{ eq[3] }} {{ eq[4] }}</td>
+                <td>{{ eq[5] }}</td>
+                <td>{{ eq[7] }}</td>
+                <td><strong>{{ eq[8] }}</strong></td>
+                <td>
+                    <a href="{{ url_for('editar_equipamento', id=eq[0]) }}" class="btn btn-warning" style="padding:2px 5px; font-size:0.8rem;">Editar</a>
+                    <a href="{{ url_for('registros_suporte', id_equipamento=eq[0]) }}" class="btn btn-secondary" style="padding:2px 5px; font-size:0.8rem;">Histórico</a>
+                    <a href="{{ url_for('deletar_equipamento', id=eq[0]) }}" class="btn btn-danger" style="padding:2px 5px; font-size:0.8rem;" onclick="return confirm('Tem certeza?')">Excluir</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8">Nenhum equipamento encontrado.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
