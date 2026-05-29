@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 import sqlite3
 import os
 
@@ -10,8 +10,16 @@ DB_PATH = "banco.db"
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
-    
-    # Tabela Equipamento
+   
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS Usuario (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nome TEXT NOT NULL,
+        cpf TEXT UNIQUE NOT NULL,
+        senha TEXT NOT NULL
+    )
+                   
+''')
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS Equipamento (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,12 +44,54 @@ def init_db():
             custo DECIMAL(10,2),
             FOREIGN KEY (id_equipamento) REFERENCES Equipamento(id)
         )
+        
     ''')
+    cursor.execute("SELECT * FROM Usuario WHERE cpf = ?", ("12345678900",))
+    usuario = cursor.fetchone()
+
+    if not usuario:
+        cursor.execute('''
+            INSERT INTO Usuario (nome, cpf, senha)
+            VALUES (?, ?, ?)
+        ''', ("Administrador", "12345678900", "123"))
+
     conn.commit()
     conn.close()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    if request.method == 'POST':
+
+        cpf = request.form['cpf']
+        senha = request.form['senha']
+
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            SELECT * FROM Usuario
+            WHERE cpf = ? AND senha = ?
+        ''', (cpf, senha))
+
+        usuario = cursor.fetchone()
+
+        conn.close()
+
+        if usuario:
+            session['usuario'] = usuario[1]
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('CPF ou senha inválidos.', 'danger')
+
+    return render_template('login.html')
 
 @app.route('/')
 def index():
+
+    if 'usuario' not in session:
+        return redirect(url_for('login'))
+
     tipo = request.args.get('tipo', '')
     status = request.args.get('status', '')
     localizacao = request.args.get('localizacao', '')
@@ -72,7 +122,12 @@ def index():
     cursor.execute(query, params)
     equipamentos = cursor.fetchall()
     conn.close()
-    return render_template('index.html', equipamentos=equipamentos, filtros=request.args)
+
+    return render_template(
+        'index.html',
+        equipamentos=equipamentos,
+        filtros=request.args
+    )
 
 @app.route('/equipamento/novo', methods=['GET', 'POST'])
 def cadastrar_equipamento():
