@@ -1,9 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+
+    <title>Cadastro de Usuário</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -13,11 +16,11 @@
             background-color:#f4f4f4;
         }
 
-        .login-container{
-            width:400px;
-            margin:100px auto;
-            padding:30px;
+        .container-cadastro{
+            width:450px;
+            margin:60px auto;
             background:white;
+            padding:30px;
             border-radius:10px;
             box-shadow:0 0 10px rgba(0,0,0,0.1);
         }
@@ -27,16 +30,20 @@
 </head>
 <body>
 
-    <div class="login-container">
+    <div class="container-cadastro">
 
-        <h2 class="text-center mb-4">Login</h2>
+        <h2 class="text-center mb-4">
+            Cadastro de Usuário
+        </h2>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for categoria, mensagem in messages %}
+
                     <div class="alert alert-{{ categoria }}">
                         {{ mensagem }}
                     </div>
+
                 {% endfor %}
             {% endif %}
         {% endwith %}
@@ -45,30 +52,50 @@
 
             <div class="mb-3">
                 <label class="form-label">Nome</label>
-                <input type="text" name="nome" class="form-control">
+
+                <input
+                    type="text"
+                    name="nome"
+                    class="form-control"
+                    required
+                >
             </div>
 
             <div class="mb-3">
                 <label class="form-label">CPF</label>
-                <input type="text" name="cpf" class="form-control" required>
+
+                <input
+                    type="text"
+                    name="cpf"
+                    class="form-control"
+                    required
+                >
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Senha</label>
-                <input type="password" name="senha" class="form-control" required>
+
+                <input
+                    type="password"
+                    name="senha"
+                    class="form-control"
+                    required
+                >
             </div>
 
             <button type="submit" class="btn btn-primary w-100">
-                Entrar
+                Cadastrar
             </button>
-    <div class="text-center mt-3">
 
-    <a href="{{ url_for('cadastrar_usuario') }}">
-        Criar nova conta
-    </a>
-
-</div>
         </form>
+
+        <div class="text-center mt-3">
+
+            <a href="{{ url_for('login') }}">
+                Já possui conta? Fazer login
+            </a>
+
+        </div>
 
     </div>
 

@@ -86,6 +86,47 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.pop('usuario', None)
+    flash('Logout realizado com sucesso!', 'info')
+    return redirect(url_for('login'))
+
+@app.route('/cadastro', methods=['GET', 'POST'])
+def cadastrar_usuario():
+
+    if request.method == 'POST':
+
+        nome = request.form['nome']
+        cpf = request.form['cpf']
+        senha = request.form['senha']
+
+        conn = sqlite3.connect(DB_PATH)
+        cursor = conn.cursor()
+
+        try:
+
+            cursor.execute('''
+                INSERT INTO Usuario (nome, cpf, senha)
+                VALUES (?, ?, ?)
+            ''', (nome, cpf, senha))
+
+            conn.commit()
+
+            flash('Usuário cadastrado com sucesso!', 'success')
+
+            return redirect(url_for('login'))
+
+        except sqlite3.IntegrityError:
+
+            flash('CPF já cadastrado no sistema.', 'danger')
+
+        finally:
+
+            conn.close()
+
+    return render_template('cadastro_usuario.html')
+
 @app.route('/')
 def index():
 
